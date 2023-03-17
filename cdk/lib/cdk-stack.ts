@@ -7,6 +7,8 @@ import * as sns from 'aws-cdk-lib/aws-sns';
 import { Construct } from "constructs";
 import { ApiGateway } from './ApiGateway';
 import { Lambda } from './lambda';
+import * as subscriptions from 'aws-cdk-lib/aws-sns-subscriptions';
+import * as iam from 'aws-cdk-lib/aws-iam';
 // import * as sqs from 'aws-cdk-lib/aws-sqs';
 
 export class CdkStack extends cdk.Stack {
@@ -33,6 +35,12 @@ export class CdkStack extends cdk.Stack {
     });
     const api = new ApiGateway(this);
     const postLambda = new Lambda(this, "post", myTopic);
+    myTopic.addSubscription(new subscriptions.EmailSubscription('kalyaniprashant7@gmail.com'));
+    const snsTopicPolicy = new iam.PolicyStatement({
+      actions: ['sns:publish'],
+      resources: ['*'],
+    });
+    postLambda.addToRolePolicy(snsTopicPolicy);
     api.postIntegration("POST","/post",postLambda);
   }
 }
