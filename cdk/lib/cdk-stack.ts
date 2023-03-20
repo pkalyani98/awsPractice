@@ -40,6 +40,7 @@ export class CdkStack extends cdk.Stack {
       actions: ['sns:publish'],
       resources: ['*'],
     });
+    myTopic.grantPublish(postLambda);
     postLambda.addToRolePolicy(snsTopicPolicy);
     api.postIntegration("POST","/post",postLambda);
   }
