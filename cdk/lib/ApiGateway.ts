@@ -13,6 +13,6 @@ export class ApiGateway extends RestApi{
     postIntegration(method: string, path: string, lambda: IFunction){
         const resource = this.root.resourceForPath(path);
         resource.addMethod(method, new LambdaIntegration(lambda))
-        
+
     }
 }
